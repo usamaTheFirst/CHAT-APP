@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "749514401342",
+    "project_id": "better-chat-flutter-b6f85",
+    "storage_bucket": "better-chat-flutter-b6f85.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:749514401342:android:ae8770c2078367c4efd36f",
+        "android_client_info": {
+          "package_name": "com.example.new_chat_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "749514401342-s8qk1hbu6t927ndua0bf49dk6pfb4v55.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBdc2IUxIqkC10ciIq8sSHzUGbJz5W2QR8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "749514401342-s8qk1hbu6t927ndua0bf49dk6pfb4v55.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
