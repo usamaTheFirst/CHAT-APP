@@ -1,11 +1,43 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:new_chat_app/Screens/auth_screen.dart';
 import 'package:new_chat_app/Screens/chat_screen.dart';
+import 'package:new_chat_app/test.dart';
+
+const AndroidNotificationChannel channel = AndroidNotificationChannel(
+    'high_importance_channel', // id
+    'High Importance Notifications', // title
+    'This channel is used for important notifications.', // description
+    importance: Importance.max,
+    playSound: true,
+    enableLights: true,
+    enableVibration: true);
+
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
+
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  // If you're going to use other Firebase services in the background, such as Firestore,
+  // make sure you call `initializeApp` before using other Firebase services.
+  await Firebase.initializeApp();
+
+  // print("Handling a background message: ${message.messageId}");
+}
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await Firebase.initializeApp();
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  await flutterLocalNotificationsPlugin
+      .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin>()
+      ?.createNotificationChannel(channel);
+  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+      alert: true, badge: true, sound: true);
   runApp(MyApp());
 }
 
@@ -15,11 +47,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Chat ',
-      theme: ThemeData(
+      theme: ThemeData.light().copyWith(
           primaryColor: Colors.pinkAccent,
           accentColor: Colors.deepPurple,
           backgroundColor: Colors.pinkAccent,
+          primaryColorLight: Colors.pinkAccent,
           accentColorBrightness: Brightness.dark,
+          primaryColorDark: Colors.pinkAccent,
           buttonTheme: ButtonTheme.of(context).copyWith(
             buttonColor: Colors.pinkAccent,
             textTheme: ButtonTextTheme.primary,
@@ -42,7 +76,15 @@ class MyApp extends StatelessWidget {
               borderRadius: BorderRadius.all(Radius.circular(32.0)),
             ),
           )),
-      home: AuthenticationScreen(),
+      home: StreamBuilder(
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: (ctx, snapShot) {
+            if (snapShot.hasData) {
+              return ChatScreen();
+            } else {
+              return AuthenticationScreen();
+            }
+          }),
     );
   }
 }
